@@ -20,7 +20,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           yarn install
-          node ./.github/workflows/update-V8-version.js
+          node ./.github/workflows/Update-v8-version.js
       - name: Read output
         run: |
           echo "version ${{steps.check.outputs.version}}"
