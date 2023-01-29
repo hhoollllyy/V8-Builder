@@ -23,6 +23,7 @@ jobs:
           node ./.github/workflows/Update-v8-version.js
       - name: Read output
         run: |
+          echo $GITHUB_OUTPUT
           echo "version ${{steps.check.outputs.version}}"
           echo "version-last ${{steps.check.outputs.version-last}}"
       - name: Commit & Push changes
