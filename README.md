@@ -1,2 +1,2 @@
-# V8-Builder
-通过Github Actions自动构建V8引擎
+## V8 Builder
+Build v8 library on GitHub Actions.
