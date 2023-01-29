@@ -12,12 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         workflow:
-          - 🐧 Linux Builds
-          - 🍎 macOS Builds
-          - 🪟 Windows Builds
-          - 🤖 Android Builds
-          - 🍎 iOS Builds
-          - 🚢 Publish Release
+          # - 🐧 Linux Builds
+          # - 🍎 macOS Builds
+           - 🪟 Windows Builds
+          # - 🤖 Android Builds
+          # - 🍎 iOS Builds
+          # - 🚢 Publish Release
     steps:
       - name: ${{ matrix.workflow }}
         uses: benc-uk/workflow-dispatch@v1
