@@ -15,12 +15,14 @@ jobs:
       version-last: ${{ steps.check.outputs.version-last }}
     steps:
       - uses: actions/checkout@v2
+      
       - name: Check v8 version
         id: check
         run: |
           cd $GITHUB_WORKSPACE
-          npm install request
-          node ./.github/workflows/Update-v8-version.js
+          # npm install request
+          using: 'node16'
+          main: './.github/workflows/Update-v8-version.js'
       - name: Read output
         run: |
           echo "version ${{steps.check.outputs.version}}"
