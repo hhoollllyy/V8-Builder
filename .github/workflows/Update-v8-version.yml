@@ -1,4 +1,4 @@
-name: ⬆️ Update V8 Version
+name: ⬆️ Update v8 version
 
 on:
   workflow_dispatch: {}
@@ -8,14 +8,14 @@ on:
 jobs:
   update-version:
     permissions: write-all
-    name: Update V8 Version
+    name: Update v8 version
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.check.outputs.version }}
       version-last: ${{ steps.check.outputs.version-last }}
     steps:
       - uses: actions/checkout@v2
-      - name: Check V8 version
+      - name: Check v8 version
         id: check
         run: |
           cd $GITHUB_WORKSPACE
@@ -31,7 +31,7 @@ jobs:
         with:
           branch: main
           token: ${{ secrets.GITHUB_TOKEN }}
-          message: Update V8 version
+          message: Update v8 version
 
   build:
     name: Dispatch build and release
