@@ -14,7 +14,7 @@ jobs:
         workflow:
           - 🐧 Linux Builds
           - 🍎 macOS Builds
-          - 🪟 Windows Builds
+          - 🖥 Windows Builds
           - 🤖 Android Builds
           - 🍎 iOS Builds
           - 🚢 Publish Release
