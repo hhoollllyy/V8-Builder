@@ -17,8 +17,8 @@ request({
     const v8_version = version.v8_version;
     const versionFile = 'v8_version';
     const lastVersion = fs.readFileSync(versionFile, 'utf-8').trim();
-    child_process.execSync(`echo "{version}={v8_version}" >> $GITHUB_OUTPUT`, { stdio: 'inherit' });
-    child_process.execSync(`echo "{version-last}={lastVersion}" >> $GITHUB_OUTPUT`, { stdio: 'inherit' });
+    child_process.execSync(`echo "version=${v8_version}" >> $GITHUB_OUTPUT`, { stdio: 'inherit' });
+    child_process.execSync(`echo "version-last=${lastVersion}" >> $GITHUB_OUTPUT`, { stdio: 'inherit' });
     if (lastVersion != v8_version) {
       console.log(`Update v8 from ${lastVersion} to ${v8_version}`);
       fs.writeFileSync(versionFile, v8_version, 'utf-8');
