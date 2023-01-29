@@ -19,7 +19,7 @@ jobs:
         id: check
         run: |
           cd $GITHUB_WORKSPACE
-          # npm install request
+          yarn install
           node ./.github/workflows/Update-v8-version.js
       - name: Read output
         run: |
