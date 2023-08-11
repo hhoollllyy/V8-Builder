@@ -1,10 +1,10 @@
-name: 🌐 Start build and publish
+name: Start Builds and Publish Release
 on:
   workflow_dispatch:
     inputs:
       version:
-        required: false
         description: V8 version to publish
+        required: false
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,12 +12,12 @@ jobs:
       fail-fast: false
       matrix:
         workflow:
-          - 🐧 Linux Builds
-          - 🍎 macOS Builds
-          - 🖥 Windows Builds
-          - 🤖 Android Builds
-          - 🍎 iOS Builds
-          - 🚢 Publish Release
+          - Windows Builds
+          - Linux Builds
+          - Android Builds
+          - iOS Builds
+          - macOS Builds
+          - Publish Release
     steps:
       - name: ${{ matrix.workflow }}
         uses: benc-uk/workflow-dispatch@v1

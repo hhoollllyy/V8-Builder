@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+
 const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
 function execute(commands) {
     if (!Array.isArray(commands)) {
-        commands = [ commands ];
+        commands = [commands];
     }
     for (const cmd of commands) {
         console.log(cmd);
@@ -20,11 +21,9 @@ function execute(commands) {
 
 // -------------------- Detect and configure build target --------------------
 
-let [ _node, _script, version, target_os, target_cpu, lib_type, flags ] = process.argv;
-if (flags) {
-    if (target_os === 'win') {
-        flags = target_os === 'win' && flags === 'MD' ? 'MD' : '';
-    }
+let [_node, _script, version, target_os, target_cpu, lib_type, flags] = process.argv;
+if (flags && target_os === 'win') {
+    flags = flags === 'AMD' ? 'AMD' : '';
 }
 
 const is_static = target_os === 'ios' || (lib_type === 'dynamic' ? false : true)
@@ -60,8 +59,9 @@ const options = {
 let action = is_static ? 'v8_monolith' : 'v8';
 let target = `${target_cpu}.release`;
 let output = `output/libs/${target_os}_${target_cpu}${flags || ''}`;
-fs.mkdirSync(output, { recursive: true });
-
+fs.mkdirSync(output, {
+    recursive: true
+});
 console.log('========================================')
 console.log('Start build V8:');
 console.log(
@@ -73,27 +73,22 @@ console.log(
         flags
     }).map(pair => `${pair[0]} = ${pair[1]}`).join('\n')
 );
-console.log('========================================')
-
+console.log('========================================');
 // -------------------- Apply patches for target --------------------
-function apply_patches() {
-    function replace(file, src, content) {
-        let text = fs.readFileSync(file, 'utf-8')
-        text = text.replace(src, content)
-        fs.writeFileSync(file, text, 'utf-8');
-    }
-
+! function apply_patches() {
     if (target_os === 'win') {
         if (is_static) {
-            replace('BUILD.gn', /v8_source_set\("v8_heap_base_headers"\) {/, 'v8_header_set("v8_heap_base_headers") {');
+            let text = fs.readFileSync('BUILD.gn', 'utf-8')
+            text = text.replace(/v8_source_set\("v8_heap_base_headers"\) {/, 'v8_header_set("v8_heap_base_headers") {')
+            fs.writeFileSync('BUILD.gn', text, 'utf-8');
         }
-        if (flags === 'MD') {
-            replace('build\\config\\win\\BUILD.gn', /configs\s?=\s?\[\s?\"\:static_crt\"\s?\]/gm, 'configs = [ ":dynamic_crt" ]');
+        if (flags === 'AMD') {
+            let text = fs.readFileSync('build\\config\\win\\BUILD.gn', 'utf-8')
+            text = text.replace(/configs\s?=\s?\[\s?\"\:static_crt\"\s?\]/gm, 'configs = [ ":dynamic_crt" ]')
+            fs.writeFileSync('build\\config\\win\\BUILD.gn', text, 'utf-8');
         }
     }
-}
-apply_patches();
-
+}()
 // -------------------- Build target with GN --------------------
 let args = Object.entries(options).map(pair => {
     let key = pair[0];
@@ -107,16 +102,19 @@ let args = Object.entries(options).map(pair => {
 });
 execute([
     target_os === 'win' ?
-        `gn gen out.gn\\${target} -args="${args.map(item => item.replace(/"/g, '""')).join(' ')}"`:
-        `python ./tools/dev/v8gen.py ${target} -vv -- '${args.join('\n')}'`,
+    `gn gen out.gn\\${target} -args="${args.map(item => item.replace(/"/g, '""')).join(' ')}"` :
+    `python ./tools/dev/v8gen.py ${target} -vv -- '${args.join('\n')}'`,
     `ninja -C out.gn/${target} -t clean`,
     `ninja -C out.gn/${target} ${action}`
 ]);
-
-
 // -------------------- Copy libs to output --------------------
 let libs = [];
-const ext = is_static ? { win: 'lib' }[target_os] || 'a' : { win: 'dll', mac: 'dylib'}[target_os] || 'so';
+const ext = is_static ? {
+    win: 'lib'
+} [target_os] || 'a' : {
+    win: 'dll',
+    mac: 'dylib'
+} [target_os] || 'so';
 const prefix = target_os === 'win' ? '' : 'lib';
 
 function addlib(name, dir = '.', outdir = '.') {
@@ -124,14 +122,26 @@ function addlib(name, dir = '.', outdir = '.') {
     if (!is_static) {
         if (target_os === 'win') {
             let pdb = src + ".pdb";
-            libs.push({ name: `${name}.pdb`, src: pdb, outdir });
+            libs.push({
+                name: `${name}.pdb`,
+                src: pdb,
+                outdir
+            });
             let lib = src + ".lib";
-            libs.push({ name: `${name}.lib`, src: lib, outdir });
+            libs.push({
+                name: `${name}.lib`,
+                src: lib,
+                outdir
+            });
         } else if (target_os === 'android') {
             src = path.join(`${dir}/${prefix}${name}.cr.${ext}`);
         }
     }
-    libs.push({ name, src, outdir });
+    libs.push({
+        name,
+        src,
+        outdir
+    });
 }
 
 if (is_static) {
@@ -151,7 +161,9 @@ libs.map(lib => {
     const file = path.join(output, lib.outdir, `${path.basename(lib.src)}`);
     if (fs.existsSync(src)) {
         const dir = path.dirname(file);
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, {recursive: true});
+        if (!fs.existsSync(dir)) fs.mkdirSync(dir, {
+            recursive: true
+        });
         fs.copyFileSync(src, file);
         console.log(`copy ${src} ==> ${file}`);
     }

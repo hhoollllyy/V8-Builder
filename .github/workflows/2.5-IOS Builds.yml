@@ -1,4 +1,4 @@
-name: 🐧 Linux Builds
+name: iOS Builds
 on:
   push: {}
   pull_request: {}
@@ -6,25 +6,25 @@ on:
     inputs:
       version:
         description: 'Version of V8 to build'
-        # default: 10.3.174.20
         required: false
 
 concurrency:
-  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-linux
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-iOS
   cancel-in-progress: true
 
 env:
   VERSION: ""
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-latest
-    name: 🐧 Linux ${{ matrix.type }} (${{ matrix.target_cpu }})
+  build-iOS:
+    runs-on: macos-latest
+    name: iOS ${{ matrix.type }} (${{ matrix.target_cpu }})
     strategy:
       fail-fast: false
       matrix:
-        target_cpu: [ 'x64' ]
-        type: [ 'static', 'dynamic' ]
+        target_cpu: [ 'x64', 'arm64' ]
+        type: [ 'static' ]
+    
     steps:
     - uses: actions/checkout@v2
     - uses: ./.github/actions/v8-version
@@ -33,9 +33,8 @@ jobs:
     - name: Run Build Script
       run: |
         cd ${{ github.workspace }}
-        sh ./build.sh linux ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ env.VERSION }}
-        # sh ./.github/test/build.sh linux ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ env.VERSION }}
+        sh ./build.sh ios ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ env.VERSION }}
     - uses: actions/upload-artifact@v2
       with:
-        name: linux-${{matrix.target_cpu}}
+        name: iOS-${{matrix.target_cpu}}-${{ matrix.type }}
         path: ~/v8/v8/output/**/*
