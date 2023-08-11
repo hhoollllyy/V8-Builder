@@ -1,0 +1,27 @@
+name: Start Builds and Publish Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: V8 version to publish
+        required: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workflow:
+          - Windows Builds
+          - Linux Builds
+          - Android Builds
+          - macOS Builds
+          - iOS Builds
+          - Publish Release
+    steps:
+      - name: ${{ matrix.workflow }}
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: ${{ matrix.workflow }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          inputs: '{ "version": "${{ inputs.version }}" }'

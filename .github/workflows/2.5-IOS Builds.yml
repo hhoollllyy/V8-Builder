@@ -1,0 +1,34 @@
+name: iOS Builds
+on:
+  push: {}
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of V8 to build'
+        required: false
+
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-iOS
+  cancel-in-progress: true
+
+jobs:
+  build-iOS:
+    runs-on: macos-latest
+    name: iOS ${{ matrix.type }} (${{ matrix.target_cpu }})
+    strategy:
+      fail-fast: false
+      matrix:
+        target_cpu: [ 'x64', 'arm64' ]
+        type: [ 'static' ]
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run Build Script
+      run: |
+        cd ${{ github.workspace }}
+        sh ./build.sh ios ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ inputs.VERSION }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: v8-iOS-${{matrix.target_cpu}}-${{ matrix.type }}
+        path: ~/v8/v8/output/**/*

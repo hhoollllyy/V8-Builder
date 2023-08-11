@@ -1,0 +1,35 @@
+name: Windows Builds
+on:
+  push: {}
+  pull_request: {}
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of V8 to build'
+        required: false
+
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-windows
+  cancel-in-progress: true
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    name: Windows ${{ matrix.type }} ${{ matrix.target_cpu }} ${{ matrix.crt }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target_cpu: [ 'x64', 'x86' ]
+        type: [ 'static', 'dynamic' ]
+        crt: [ 'MT', 'MD' ]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Run Build Script
+      shell: cmd
+      run: |
+        cd ${{ github.workspace }}
+        call .\build.cmd win ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ inputs.VERSION }} ${{ matrix.crt }}
+    - uses: actions/upload-artifact@v3
+      with:
+        name: v8-Windows-${{matrix.target_cpu}}-${{ matrix.type }}-${{ matrix.crt }}
+        path: v8/v8/output/**/*
