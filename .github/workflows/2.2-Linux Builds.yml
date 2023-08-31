@@ -1,7 +1,5 @@
 name: Linux Builds
 on:
-  push: {}
-  pull_request: {}
   workflow_dispatch:
     inputs:
       version:
