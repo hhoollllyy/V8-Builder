@@ -15,21 +15,37 @@ concurrency:
 jobs:
   build-windows:
     runs-on: windows-latest
+<<<<<<< HEAD:.github/workflows/2.1-Windows Builds.yml
     name: Windows ${{ matrix.type }} ${{ matrix.target_cpu }} ${{ matrix.crt }}
+=======
+    name: Windows ${{ matrix.type }} (${{ matrix.target_cpu }}${{ matrix.crt }})
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/windows.yml
     strategy:
       fail-fast: false
       matrix:
         target_cpu: [ 'x64', 'x86' ]
         type: [ 'static', 'dynamic' ]
+<<<<<<< HEAD:.github/workflows/2.1-Windows Builds.yml
         crt: [ 'MT', 'MD' ]
+=======
+        crt: [ '', 'AMD' ]
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/windows.yml
     steps:
     - uses: actions/checkout@v3
     - name: Run Build Script
       shell: cmd
       run: |
         cd ${{ github.workspace }}
+<<<<<<< HEAD:.github/workflows/2.1-Windows Builds.yml
         call .\build.cmd win ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ inputs.VERSION }} ${{ matrix.crt }}
     - uses: actions/upload-artifact@v3
       with:
         name: v8-Windows-${{matrix.target_cpu}}-${{ matrix.type }}-${{ matrix.crt }}
         path: v8/v8/output/**/*
+=======
+        call .\build.cmd win ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ env.VERSION }} ${{ matrix.crt }}
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Windows-${{matrix.target_cpu}}-${{ matrix.type }}-${{ matrix.crt }}
+        path: v8/v8/output/**/*
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/windows.yml

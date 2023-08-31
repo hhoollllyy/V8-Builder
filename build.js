@@ -23,7 +23,11 @@ function execute(commands) {
 
 let [_node, _script, version, target_os, target_cpu, lib_type, flags] = process.argv;
 if (flags && target_os === 'win') {
+<<<<<<< HEAD
     flags = flags === 'MD' ? 'MD' : '';
+=======
+    flags = flags === 'AMD' ? 'AMD' : '';
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a
 }
 
 const is_static = target_os === 'ios' || (lib_type === 'dynamic' ? false : true)
@@ -82,7 +86,11 @@ console.log('========================================');
             text = text.replace(/v8_source_set\("v8_heap_base_headers"\) {/, 'v8_header_set("v8_heap_base_headers") {')
             fs.writeFileSync('BUILD.gn', text, 'utf-8');
         }
+<<<<<<< HEAD
         if (flags === 'MD') {
+=======
+        if (flags === 'AMD') {
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a
             let text = fs.readFileSync('build\\config\\win\\BUILD.gn', 'utf-8')
             text = text.replace(/configs\s?=\s?\[\s?\"\:static_crt\"\s?\]/gm, 'configs = [ ":dynamic_crt" ]')
             fs.writeFileSync('build\\config\\win\\BUILD.gn', text, 'utf-8');

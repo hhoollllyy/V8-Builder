@@ -15,8 +15,13 @@ jobs:
           - Windows Builds
           - Linux Builds
           - Android Builds
+<<<<<<< HEAD:.github/workflows/1.2-Start Builds and Publish Release.yml
           - macOS Builds
           - iOS Builds
+=======
+          - iOS Builds
+          - macOS Builds
+>>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/start-build-publish.yml
           - Publish Release
     steps:
       - name: ${{ matrix.workflow }}
