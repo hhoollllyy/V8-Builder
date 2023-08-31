@@ -20,11 +20,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE
           yarn install
-<<<<<<< HEAD:.github/workflows/1.1-Update v8 version.yml
           node ./js/Update_v8_version.js
-=======
-          node ./Update_v8_version.js
->>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/Update-v8-version.yml
       - name: Read output
         run: |
           echo $GITHUB_OUTPUT
@@ -48,9 +44,5 @@ jobs:
         uses: benc-uk/workflow-dispatch@v1
         with:
           workflow: Start Builds and Publish Release
-<<<<<<< HEAD:.github/workflows/1.1-Update v8 version.yml
           token: ${{ secrets.GITHUB_TOKEN }}
-=======
-          token: ${{ secrets.ACCESS_TOKEN }}
->>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/Update-v8-version.yml
           inputs: '{ "version": "${{ needs.update-version.outputs.version }}" }'

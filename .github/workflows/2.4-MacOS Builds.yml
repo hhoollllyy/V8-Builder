@@ -27,16 +27,8 @@ jobs:
     - name: Run Build Script
       run: |
         cd ${{ github.workspace }}
-<<<<<<< HEAD:.github/workflows/2.4-MacOS Builds.yml
         sh ./build.sh mac ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ inputs.VERSION }}
     - uses: actions/upload-artifact@v3
       with:
         name: v8-macOS-${{matrix.target_cpu}}-${{ matrix.type }}
         path: ~/v8/v8/output/**/*
-=======
-        sh ./build.sh mac ${{ matrix.target_cpu }} ${{ matrix.type }} ${{ env.VERSION }}
-    - uses: actions/upload-artifact@v2
-      with:
-        name: macOS-${{matrix.target_cpu}}-${{ matrix.type }}
-        path: ~/v8/v8/output/**/*
->>>>>>> c759b8dbbfedf699e2b3fb728db81c4707bea05a:.github/workflows/macos.yml
