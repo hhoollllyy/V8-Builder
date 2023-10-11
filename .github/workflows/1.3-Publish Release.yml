@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: ./.github/actions/v8-version
+    - uses: ./.github/actions/1.1-Update v8 version.yml
       with:
         version: ${{ inputs.version }}
     - name: Download artifacts
